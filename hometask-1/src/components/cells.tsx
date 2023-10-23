@@ -85,6 +85,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   }
 
   checkWinner() {
+    let hasWon = false;
     const winningMoves = [
       [0, 1, 2],
       [3, 4, 5],
@@ -99,16 +100,18 @@ export class Cells extends React.Component<CellsProps, CellsState> {
     for (let i = 0; i < winningMoves.length; i++) {
       if (winningMoves[i].every((item) => this.state.player1.includes(item))) {
         this.setState({ showMessage: true, message: "Player 1 Won 🎉!" });
+        hasWon = true;
       }
       if (winningMoves[i].every((item) => this.state.player2.includes(item))) {
         this.setState({ showMessage: true, message: "Player 2 Won 🎉!" });
+        hasWon = true;
       }
-    }
-    if (
-      this.state.player1.length + this.state.player2.length == 9 &&
-      !this.state.showMessage
-    ) {
-      this.setState({ showMessage: true, message: "Draw" });
+      if (
+        !hasWon &&
+        this.state.player1.length + this.state.player2.length === 9
+      ) {
+        this.setState({ showMessage: true, message: "Draw" });
+      }
     }
   }
 
