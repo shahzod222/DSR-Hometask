@@ -32,8 +32,9 @@ export class App extends React.Component<DefaultProps, AppState> {
           alignItems="center"
           height="100vh"
         >
-          {this.state.isStarted && <Cells handleRestart={this.handleRestart} />}
-          {!this.state.isStarted && (
+          {this.state.isStarted ? (
+            <Cells handleRestart={this.handleRestart} />
+          ) : (
             <MyButton value="Start" onClick={this.handleStart} />
           )}
         </Box>
