@@ -15,7 +15,7 @@ export class MyButton extends React.Component<MyButtonProps> {
         colorScheme="teal"
         onClick={this.props.onClick}
       >
-        {this.props.value}
+        {this.props.text}
       </Button>
     );
   }

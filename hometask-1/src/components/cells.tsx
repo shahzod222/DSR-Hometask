@@ -1,31 +1,31 @@
 import React from "react";
-import { CellsProps, CellsState } from "../types";
+import { CellsProps, CellsState, Players, Values } from "../types";
 import { Cell } from "./cell";
 import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
 import { MyButton } from "./button";
 
 const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
+const initialState: CellsState = {
+  currentPlayer: 1,
+  player1: [],
+  player2: [],
+  cells: {},
+  message: "",
+  showMessage: false,
+};
+
 export class Cells extends React.Component<CellsProps, CellsState> {
   constructor(props: CellsProps) {
     super(props);
 
-    this.state = { ...this.initialState };
+    this.state = { ...initialState };
 
     this.handleClick = this.handleClick.bind(this);
     this.handleHelpClick = this.handleHelpClick.bind(this);
     this.restartGame = this.restartGame.bind(this);
     this.updateCellValue = this.updateCellValue.bind(this);
   }
-
-  initialState: CellsState = {
-    currentPlayer: 1,
-    player1: [],
-    player2: [],
-    cells: {},
-    message: "",
-    showMessage: false,
-  };
 
   handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     const cell = Number((e.target as HTMLButtonElement).id);
@@ -34,7 +34,8 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   }
 
   updateCellValue(id: number) {
-    const value = this.state.currentPlayer === 1 ? "X" : "O";
+    const value =
+      this.state.currentPlayer === 1 ? Values.value1 : Values.value2;
 
     this.setState((prevState) => ({
       cells: {
@@ -47,7 +48,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   updateStateAfterClick(cell: number) {
     if (!this.state.showMessage) {
       const currentPlayer = this.state.currentPlayer;
-      const nextPlayer = currentPlayer === 1 ? 2 : 1;
+      const nextPlayer = currentPlayer === 1 ? Players.two : Players.one;
 
       if (
         !this.state.player1.includes(cell) &&
@@ -101,10 +102,12 @@ export class Cells extends React.Component<CellsProps, CellsState> {
       if (winningMoves[i].every((item) => this.state.player1.includes(item))) {
         this.setState({ showMessage: true, message: "Player 1 Won 🎉!" });
         hasWon = true;
+        break;
       }
       if (winningMoves[i].every((item) => this.state.player2.includes(item))) {
         this.setState({ showMessage: true, message: "Player 2 Won 🎉!" });
         hasWon = true;
+        break;
       }
       if (
         !hasWon &&
@@ -116,7 +119,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   }
 
   restartGame() {
-    this.setState({ ...this.initialState });
+    this.setState({ ...initialState });
     this.props.handleRestart();
   }
 
@@ -125,7 +128,8 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   }
 
   render() {
-    const currentSign = this.state.currentPlayer === 1 ? "X" : "O";
+    const currentSign =
+      this.state.currentPlayer === 1 ? Values.value1 : Values.value2;
 
     return (
       <Box>
@@ -147,9 +151,9 @@ export class Cells extends React.Component<CellsProps, CellsState> {
           ))}
         </SimpleGrid>
         <Box display="flex" justifyContent="space-between">
-          <MyButton value="Help" onClick={this.handleHelpClick} />
+          <MyButton text="Help" onClick={this.handleHelpClick} />
           {this.state.player1.length + this.state.player2.length !== 0 && (
-            <MyButton value="Restart" onClick={this.restartGame} />
+            <MyButton text="Restart" onClick={this.restartGame} />
           )}
         </Box>
       </Box>

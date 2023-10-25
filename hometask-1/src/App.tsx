@@ -35,7 +35,7 @@ export class App extends React.Component<DefaultProps, AppState> {
           {this.state.isStarted ? (
             <Cells handleRestart={this.handleRestart} />
           ) : (
-            <MyButton value="Start" onClick={this.handleStart} />
+            <MyButton text="Start" onClick={this.handleStart} />
           )}
         </Box>
       </ChakraProvider>
