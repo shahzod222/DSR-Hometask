@@ -35,7 +35,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   updateCellValue(id: number) {
     const value =
-      this.state.currentPlayer === 1 ? Values.value1 : Values.value2;
+      this.state.currentPlayer === Players.one ? Values.value1 : Values.value2;
 
     this.setState((prevState) => ({
       cells: {
@@ -48,7 +48,8 @@ export class Cells extends React.Component<CellsProps, CellsState> {
   updateStateAfterClick(cell: number) {
     if (!this.state.showMessage) {
       const currentPlayer = this.state.currentPlayer;
-      const nextPlayer = currentPlayer === 1 ? Players.two : Players.one;
+      const nextPlayer =
+        currentPlayer === Players.one ? Players.two : Players.one;
 
       if (
         !this.state.player1.includes(cell) &&
@@ -57,7 +58,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
         this.updateCellValue(cell);
         this.setState({ currentPlayer: nextPlayer });
 
-        if (nextPlayer === 2) {
+        if (nextPlayer === Players.two) {
           this.setState((prevState) => ({
             player1: [...prevState.player1, cell],
           }));
@@ -129,7 +130,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   render() {
     const currentSign =
-      this.state.currentPlayer === 1 ? Values.value1 : Values.value2;
+      this.state.currentPlayer === Players.one ? Values.value1 : Values.value2;
 
     return (
       <Box>
