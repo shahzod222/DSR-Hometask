@@ -7,7 +7,7 @@ import { MyButton } from "./button";
 const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 const initialState: CellsState = {
-  currentPlayer: 1,
+  currentPlayer: Players.One,
   player1: [],
   player2: [],
   cells: {},
@@ -35,7 +35,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   updateCellValue(id: number) {
     const value =
-      this.state.currentPlayer === Players.one ? Values.value1 : Values.value2;
+      this.state.currentPlayer === Players.One ? Values.X : Values.O;
 
     this.setState((prevState) => ({
       cells: {
@@ -49,7 +49,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
     if (!this.state.showMessage) {
       const currentPlayer = this.state.currentPlayer;
       const nextPlayer =
-        currentPlayer === Players.one ? Players.two : Players.one;
+        currentPlayer === Players.One ? Players.Two : Players.One;
 
       if (
         !this.state.player1.includes(cell) &&
@@ -58,7 +58,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
         this.updateCellValue(cell);
         this.setState({ currentPlayer: nextPlayer });
 
-        if (nextPlayer === Players.two) {
+        if (nextPlayer === Players.Two) {
           this.setState((prevState) => ({
             player1: [...prevState.player1, cell],
           }));
@@ -130,7 +130,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   render() {
     const currentSign =
-      this.state.currentPlayer === Players.one ? Values.value1 : Values.value2;
+      this.state.currentPlayer === Players.One ? Values.X : Values.O;
 
     return (
       <Box>

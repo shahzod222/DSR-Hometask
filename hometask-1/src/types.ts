@@ -1,24 +1,21 @@
 export interface DefaultProps {}
 
 export enum Values {
-  value1 = "X",
-  value2 = "O",
+  X = "X",
+  O = "O",
 }
 
 export enum Players {
-  one = 1,
-  two = 2,
+  One = 1,
+  Two = 2,
 }
 
-type CellValue = Values.value1 | Values.value2;
-type PlayersNum = Players.one | Players.two;
-
 export interface CellsState {
-  currentPlayer: PlayersNum;
+  currentPlayer: Players;
   player1: number[];
   player2: number[];
   cells: {
-    [key: number]: CellValue;
+    [key: number]: Values;
   };
   message: string;
   showMessage: boolean;
@@ -34,7 +31,7 @@ export interface AppState {
 
 export interface CellProps {
   el: number;
-  value: CellValue;
+  value: Values;
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
