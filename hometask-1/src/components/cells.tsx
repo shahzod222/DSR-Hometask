@@ -1,5 +1,5 @@
 import React from "react";
-import { CellsProps, CellsState, Players, Values } from "../types";
+import { CellsProps, CellsState, Players, CellValue } from "../types";
 import { Cell } from "./cell";
 import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
 import { MyButton } from "./button";
@@ -35,7 +35,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   updateCellValue(id: number) {
     const value =
-      this.state.currentPlayer === Players.One ? Values.X : Values.O;
+      this.state.currentPlayer === Players.One ? CellValue.X : CellValue.O;
 
     this.setState((prevState) => ({
       cells: {
@@ -130,7 +130,7 @@ export class Cells extends React.Component<CellsProps, CellsState> {
 
   render() {
     const currentSign =
-      this.state.currentPlayer === Players.One ? Values.X : Values.O;
+      this.state.currentPlayer === Players.One ? CellValue.X : CellValue.O;
 
     return (
       <Box>
