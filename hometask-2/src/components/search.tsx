@@ -1,5 +1,10 @@
 import React from "react";
-import { SearchProps } from "../types";
+
+interface SearchProps {
+  handleSearch: () => void;
+  handleSearchChange: (e: { target: { value: string } }) => void;
+  search: string;
+}
 
 export class Search extends React.Component<SearchProps> {
   constructor(props: SearchProps) {

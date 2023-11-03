@@ -1,12 +1,25 @@
 import React from "react";
-import { AppState, DefaultProps } from "./types";
+import { ListElement } from "./types";
 import { Search } from "./components/search";
 import { List } from "./components/list";
 
-export class App extends React.Component<DefaultProps, AppState> {
+interface AppProps {}
+
+interface AppState {
+  search: string;
+  list: ListElement[];
+  isLoading: boolean;
+}
+
+const apiKey =
+  "c78b4630db5ebfbcda84fa9e18836b91e05ff430e0fbf0c878aed5283bae5988";
+
+const apiUrl = "https://min-api.cryptocompare.com/data/price";
+
+export class App extends React.Component<AppProps, AppState> {
   interval: number | undefined;
 
-  constructor(props: DefaultProps) {
+  constructor(props: AppProps) {
     super(props);
 
     this.state = {
@@ -16,26 +29,29 @@ export class App extends React.Component<DefaultProps, AppState> {
     };
   }
 
-  fetchData = (
-    search: string = this.state.search,
-    purpose: string = "search"
-  ) => {
-    const apiKey =
-      "c78b4630db5ebfbcda84fa9e18836b91e05ff430e0fbf0c878aed5283bae5988";
-    const url = `https://min-api.cryptocompare.com/data/price?fsym=${search}&tsyms=USD&api_key=${apiKey}&gt`;
+  componentDidMount() {
+    this.searchData("DOGE");
 
-    if (purpose === "search") this.setState({ isLoading: true });
+    this.interval = setInterval(() => {
+      this.updateData();
+    }, 5000);
+  }
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        if (purpose === "search") {
-          this.addElement(search, data.USD);
-          this.setState({ isLoading: false, search: "" });
-        } else if (purpose === "update") {
-          this.updateList(search, data.USD);
-        }
-      });
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  addElement = (name: string, cost: number) => {
+    this.setState({
+      list: [...this.state.list, { name, cost, trend: "secondary" }],
+    });
+  };
+
+  removeElement = (name: string) => {
+    this.setState((prevState) => {
+      const updatedList = prevState.list.filter((item) => item.name !== name);
+      return { list: updatedList };
+    });
   };
 
   handleSearchChange = (e: { target: { value: string } }) => {
@@ -47,52 +63,58 @@ export class App extends React.Component<DefaultProps, AppState> {
       (item) => item.name === this.state.search
     );
     if (!isElementExist) {
-      this.fetchData();
+      this.searchData();
     }
   };
 
-  addElement = (name: string, cost: number) => {
-    this.setState({
-      list: [...this.state.list, { name, cost }],
-    });
+  searchData = (name?: string) => {
+    const search = name ? name : this.state.search;
+    const url = `${apiUrl}fsym=${search}&tsyms=USD&api_key=${apiKey}&gt`;
+
+    this.setState({ isLoading: true });
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.USD) {
+          this.addElement(search, data.USD);
+        }
+
+        this.setState({ isLoading: false });
+      });
   };
 
-  removeElement = (name: string) => {
-    this.setState((prevState) => {
-      const updatedList = prevState.list.filter((item) => item.name !== name);
-      return { list: updatedList };
+  updateData = () => {
+    const names = this.state.list.map((item) => item.name);
+    names.forEach((el) => {
+      const url = `${apiUrl}fsym=${el}&tsyms=USD&api_key=${apiKey}&gt`;
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          this.updateList(el, data.USD);
+        });
     });
   };
 
   updateList = (search: string, cost: number) => {
-    this.setState((prevState) => {
-      const updatedList = prevState.list.map((el) => {
-        if (el.name === search) {
-          const trend = el.cost > cost ? "↗️" : el.cost < cost ? "↙️" : "➡️";
-          return { name: el.name, cost, trend };
-        }
-        return el;
-      });
-      return { list: updatedList };
-    });
+    this.setState((prevState) => ({
+      list: prevState.list.map((el) =>
+        el.name === search
+          ? {
+              ...el,
+              cost,
+              trend:
+                el.cost > cost
+                  ? "success"
+                  : el.cost < cost
+                  ? "danger"
+                  : "secondary",
+            }
+          : el
+      ),
+    }));
   };
-
-  updateElements = () => {
-    const names = this.state.list.map((item) => item.name);
-    names.forEach((el) => this.fetchData(el, "update"));
-  };
-
-  componentDidMount() {
-    this.fetchData("DOGE");
-
-    this.interval = setInterval(() => {
-      this.updateElements();
-    }, 5000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
 
   render() {
     return (
