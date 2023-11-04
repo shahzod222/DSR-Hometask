@@ -14,7 +14,7 @@ interface AppState {
 const apiKey =
   "c78b4630db5ebfbcda84fa9e18836b91e05ff430e0fbf0c878aed5283bae5988";
 
-const apiUrl = "https://min-api.cryptocompare.com/data/price";
+const apiUrl = "https://min-api.cryptocompare.com/data/price?";
 
 export class App extends React.Component<AppProps, AppState> {
   interval: number | undefined;
@@ -69,7 +69,8 @@ export class App extends React.Component<AppProps, AppState> {
 
   searchData = (name?: string) => {
     const search = name ? name : this.state.search;
-    const url = `${apiUrl}fsym=${search}&tsyms=USD&api_key=${apiKey}&gt`;
+    const url = `${apiUrl}fsym=${search}&tsyms=USD&api_key=${apiKey}`;
+    console.log(url);
 
     this.setState({ isLoading: true });
 
@@ -87,7 +88,7 @@ export class App extends React.Component<AppProps, AppState> {
   updateData = () => {
     const names = this.state.list.map((item) => item.name);
     names.forEach((el) => {
-      const url = `${apiUrl}fsym=${el}&tsyms=USD&api_key=${apiKey}&gt`;
+      const url = `${apiUrl}fsym=${el}&tsyms=USD&api_key=${apiKey}`;
 
       fetch(url)
         .then((response) => response.json())
