@@ -17,14 +17,20 @@ const Step1: React.FC<{ onNext: (data: Step1Data) => void }> = ({ onNext }) => {
       return;
     }
 
-    if (
-      password.length < 6 ||
-      !/\d/.test(password) ||
-      !/[a-zA-Z]/.test(password)
-    ) {
+    if (password.length < 6) {
       setError(
         "Password must be at least 6 characters long and contain at least one letter and one number."
       );
+      return;
+    }
+
+    if (!/\d/.test(password)) {
+      setError("Password must contain at least and one number.");
+      return;
+    }
+
+    if (!/[a-zA-Z]/.test(password)) {
+      setError("Password must contain at least and one letter .");
       return;
     }
 
