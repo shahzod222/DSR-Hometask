@@ -16,13 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { TodoType } from "./Main";
 
-interface EditTodoForm {
+interface EditTodoFormProps {
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   todo: TodoType;
 }
 
-const EditTodoForm: React.FC<EditTodoForm> = ({
+const EditTodoForm: React.FC<EditTodoFormProps> = ({
   todo,
   setLoading,
   setTodos,
@@ -34,43 +34,37 @@ const EditTodoForm: React.FC<EditTodoForm> = ({
   const [descriptionError, setDescriptionError] = useState("");
 
   const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
 
   const handleSubmit = () => {
-    if (title === "") {
+    if (!title.trim()) {
       setTitleError("Fill title");
     }
 
-    if (description === "") {
+    if (!description.trim()) {
       setDescriptionError("Fill description");
     }
 
-    if (description === todo.description) {
+    if (description === todo.description || title === todo.title) {
       setDescriptionError("Edit TODO");
-    }
-
-    if (title === todo.title) {
       setTitleError("Edit TODO");
     }
 
     if (
-      description &&
-      title &&
-      description !== todo.description &&
-      title !== todo.title
+      title.trim() !== todo.title &&
+      description.trim() !== todo.description
     ) {
       setDescriptionError("");
       setTitleError("");
 
       const todoData = {
-        title: title,
-        description: description,
+        title: title.trim(),
+        description: description.trim(),
       };
 
       const updatedTodo = {
         id: todo.id,
-        title: title,
-        description: description,
+        title: title.trim(),
+        description: description.trim(),
         createdBy: todo.createdBy,
       };
 
@@ -104,12 +98,7 @@ const EditTodoForm: React.FC<EditTodoForm> = ({
         Edit
       </Button>
 
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit TODO</ModalHeader>
