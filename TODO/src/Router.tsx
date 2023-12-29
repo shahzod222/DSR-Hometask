@@ -34,7 +34,7 @@ const PublicRoute = ({ redirectPath = "/main" }) => {
 };
 
 function AppRoutes() {
-  const { setUser, isUser } = useUser();
+  const { setUser } = useUser();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function AppRoutes() {
         setUser(data);
         setLoading(false);
       });
-  }, [isUser]);
+  }, []);
 
   if (loading) {
     return (

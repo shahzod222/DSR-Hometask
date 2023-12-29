@@ -42,9 +42,7 @@ const Users: React.FC = () => {
       }
     };
 
-    if (loading) {
-      fetchUsers();
-    }
+    fetchUsers();
   }, []);
 
   if (user.role !== "admin") {
