@@ -1,27 +1,13 @@
-import React from "react";
 import { Box, Flex, Spacer, Button, Container } from "@chakra-ui/react";
+import { logout } from "../requests";
 import { useUser } from "../UserContext";
 import { Link } from "react-router-dom";
 
-const logout = async () => {
-  try {
-    await fetch("http://localhost:3000/api/v1/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-  } catch (error) {
-    console.error("Error during logout:", error);
-  }
-};
-
-const Navbar: React.FC = () => {
+function Navbar() {
   const { setIsUser, user } = useUser();
 
-  const handleLogOut = async () => {
-    await logout();
+  const handleLogOut = () => {
+    logout();
     setIsUser(false);
   };
 
@@ -56,6 +42,6 @@ const Navbar: React.FC = () => {
       </Container>
     </Box>
   );
-};
+}
 
 export default Navbar;

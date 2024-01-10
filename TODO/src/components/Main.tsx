@@ -26,53 +26,36 @@ function Main() {
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = (id: number) => {
     setLoading(true);
-
-    try {
-      const response = await fetch(`http://localhost:3000/api/v1/todos/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (response.ok) {
+    fetch(`http://localhost:3000/api/v1/todos/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+        setLoading(false);
         setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
       }
-    } catch (error) {
-      console.error("Error deleting todo:", error);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      setLoading(true);
-
-      try {
-        const response = await fetch("http://localhost:3000/api/v1/todos", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setTodos(data);
-        }
-      } catch (error) {
-        console.error("Error fetching todos:", error);
-      } finally {
+    setLoading(true);
+    fetch("http://localhost:3000/api/v1/todos", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(data);
         setLoading(false);
-      }
-    };
-
-    fetchTodos();
+      });
   }, []);
 
   return (
@@ -100,44 +83,46 @@ function Main() {
             display="flex"
             flexWrap="wrap"
           >
-            {todos.map((el) => (
-              <Card
-                maxW="md"
-                minWidth="400px"
-                borderRadius="lg"
-                overflow="hidden"
-                mb={4}
-                key={el.id}
-              >
-                <CardHeader>
-                  <Box flex="1">
-                    <Box mb={2}>
-                      <strong>{el.title}</strong>
+            {todos.map((el) => {
+              return (
+                <Card
+                  maxW="md"
+                  minWidth="400px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  mb={4}
+                  key={el.id}
+                >
+                  <CardHeader>
+                    <Box flex="1">
+                      <Box mb={2}>
+                        <strong>{el.title}</strong>
+                      </Box>
+                      <Box color="gray.500">{el.description}</Box>
                     </Box>
-                    <Box color="gray.500">{el.description}</Box>
-                  </Box>
-                </CardHeader>
-                {(user.role === "admin" || user.role === el.createdBy) && (
-                  <CardBody>
-                    <Box textAlign="right">
-                      <EditTodoForm
-                        todo={el}
-                        setLoading={setLoading}
-                        setTodos={setTodos}
-                      />
-                      <Button
-                        variant="outline"
-                        colorScheme="red"
-                        onClick={() => handleDelete(el.id)}
-                        mx={2}
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                  </CardBody>
-                )}
-              </Card>
-            ))}
+                  </CardHeader>
+                  {(user.role === "admin" || user.role === el.createdBy) && (
+                    <CardBody>
+                      <Box textAlign="right">
+                        <EditTodoForm
+                          todo={el}
+                          setLoading={setLoading}
+                          setTodos={setTodos}
+                        />
+                        <Button
+                          variant="outline"
+                          colorScheme="red"
+                          onClick={() => handleDelete(el.id)}
+                          mx={2}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </CardBody>
+                  )}
+                </Card>
+              );
+            })}
           </Stack>
         </>
       )}

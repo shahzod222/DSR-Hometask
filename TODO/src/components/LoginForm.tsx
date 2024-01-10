@@ -12,12 +12,7 @@ import {
 import { Navigate } from "react-router-dom";
 import { useUser } from "../UserContext";
 
-interface UserData {
-  login: string;
-  password: string;
-}
-
-const LoginForm: React.FC = () => {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -25,11 +20,19 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { isUser, setIsUser } = useUser();
 
-  const validateUsername = (value: string) =>
-    value !== "Admin" && value !== "User" ? "Invalid username" : "";
+  const validateUsername = (value: string) => {
+    if (value !== "Admin" && value !== "User") {
+      return "Invalid username";
+    }
+    return "";
+  };
 
-  const validatePassword = (value: string) =>
-    value !== "admin123" && value !== "user123" ? "Invalid password" : "";
+  const validatePassword = (value: string) => {
+    if (value !== "admin123" && value !== "user123") {
+      return "Invalid password";
+    }
+    return "";
+  };
 
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -43,7 +46,7 @@ const LoginForm: React.FC = () => {
     if (!usernameValidation && !passwordValidation) {
       setLoading(true);
 
-      const userData: UserData = {
+      const userData = {
         login: username,
         password: password,
       };
@@ -52,25 +55,23 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const login = async (userData: UserData) => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(userData),
+  const login = (userData: { login: string; password: string }) => {
+    fetch("http://localhost:3000/api/v1/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(userData),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setIsUser(true);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-      if (response.status === 200) {
-        setIsUser(true);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -133,6 +134,6 @@ const LoginForm: React.FC = () => {
       )}
     </Box>
   );
-};
+}
 
 export default LoginForm;

@@ -16,39 +16,37 @@ import {
 } from "@chakra-ui/react";
 import { TodoType } from "./Main";
 
-interface CreateTodoFormProps {
+interface CreateTodoForm {
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-const CreateTodoForm: React.FC<CreateTodoFormProps> = ({
-  setTodos,
-  setLoading,
-}) => {
+const CreateTodoForm: React.FC<CreateTodoForm> = ({ setTodos, setLoading }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
 
-  const initialRef = React.useRef<HTMLInputElement | null>(null);
+  const initialRef = React.useRef(null);
+  const finalRef = React.useRef(null);
 
   const handleSubmit = () => {
-    if (!title.trim()) {
+    if (title === "") {
       setTitleError("Fill title");
     }
 
-    if (!description.trim()) {
+    if (description === "") {
       setDescriptionError("Fill description");
     }
 
-    if (title.trim() && description.trim()) {
+    if (description && title) {
       setDescriptionError("");
       setTitleError("");
 
       const todoData = {
-        title: title.trim(),
-        description: description.trim(),
+        title: title,
+        description: description,
       };
 
       setLoading(true);
@@ -76,7 +74,12 @@ const CreateTodoForm: React.FC<CreateTodoFormProps> = ({
         Create TODO
       </Button>
 
-      <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        initialFocusRef={initialRef}
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create TODO</ModalHeader>

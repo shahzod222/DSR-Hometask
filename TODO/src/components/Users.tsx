@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./NavBar";
 import { UserType, useUser } from "../UserContext";
 import {
@@ -13,9 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
 
-const Users: React.FC = () => {
+function Users() {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
@@ -68,21 +68,23 @@ const Users: React.FC = () => {
         <>
           <Navbar />
           <Stack spacing="4">
-            {users.map((el) => (
-              <Card variant="filled" key={el.name}>
-                <CardHeader>
-                  <Heading size="md"> {el.name}</Heading>
-                </CardHeader>
-                <CardBody>
-                  <Text>role = {el.role}</Text>
-                </CardBody>
-              </Card>
-            ))}
+            {users.map((el) => {
+              return (
+                <Card variant="filled" key={el.name}>
+                  <CardHeader>
+                    <Heading size="md"> {el.name}</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <Text>role = {el.role}</Text>
+                  </CardBody>
+                </Card>
+              );
+            })}
           </Stack>
         </>
       )}
     </>
   );
-};
+}
 
 export default Users;
