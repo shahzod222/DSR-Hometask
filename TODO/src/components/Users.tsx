@@ -20,6 +20,7 @@ function Users() {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         if (user.role === "admin") {
           const response = await fetch("http://localhost:3000/api/v1/users", {

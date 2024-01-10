@@ -13,12 +13,13 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../UserContext";
 
 function LoginForm() {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { isUser, setIsUser } = useUser();
+  const { isUser, setIsUser, setUser } = useUser();
 
   const validateUsername = (value: string) => {
     if (value !== "Admin" && value !== "User") {
@@ -26,7 +27,19 @@ function LoginForm() {
     }
     return "";
   };
+  const validateUsername = (value: string) => {
+    if (value !== "Admin" && value !== "User") {
+      return "Invalid username";
+    }
+    return "";
+  };
 
+  const validatePassword = (value: string) => {
+    if (value !== "admin123" && value !== "user123") {
+      return "Invalid password";
+    }
+    return "";
+  };
   const validatePassword = (value: string) => {
     if (value !== "admin123" && value !== "user123") {
       return "Invalid password";
@@ -47,6 +60,7 @@ function LoginForm() {
       setLoading(true);
 
       const userData = {
+      const userData = {
         login: username,
         password: password,
       };
@@ -66,7 +80,22 @@ function LoginForm() {
     })
       .then((res) => {
         if (res.status === 200) {
-          setIsUser(true);
+          return fetch("http://localhost:3000/api/v1/me", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          })
+            .then((res) => {
+              if (res.status === 200) {
+                return res.json();
+              }
+            })
+            .then((data) => {
+              setIsUser(true);
+              setUser(data);
+            });
         }
       })
       .finally(() => {
@@ -134,6 +163,7 @@ function LoginForm() {
       )}
     </Box>
   );
+}
 }
 
 export default LoginForm;

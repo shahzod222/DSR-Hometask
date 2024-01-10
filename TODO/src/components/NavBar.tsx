@@ -1,14 +1,18 @@
 import { Box, Flex, Spacer, Button, Container } from "@chakra-ui/react";
 import { logout } from "../requests";
+import { logout } from "../requests";
 import { useUser } from "../UserContext";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const { setIsUser, user } = useUser();
+  const { setIsUser, user, setUser } = useUser();
 
   const handleLogOut = () => {
     logout();
+  const handleLogOut = () => {
+    logout();
     setIsUser(false);
+    setUser({ role: "", name: "" });
   };
 
   return (
