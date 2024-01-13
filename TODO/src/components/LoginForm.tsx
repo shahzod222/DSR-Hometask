@@ -13,7 +13,6 @@ import { Navigate } from "react-router-dom";
 import { useUser } from "../UserContext";
 
 function LoginForm() {
-function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -27,19 +26,7 @@ function LoginForm() {
     }
     return "";
   };
-  const validateUsername = (value: string) => {
-    if (value !== "Admin" && value !== "User") {
-      return "Invalid username";
-    }
-    return "";
-  };
 
-  const validatePassword = (value: string) => {
-    if (value !== "admin123" && value !== "user123") {
-      return "Invalid password";
-    }
-    return "";
-  };
   const validatePassword = (value: string) => {
     if (value !== "admin123" && value !== "user123") {
       return "Invalid password";
@@ -59,7 +46,6 @@ function LoginForm() {
     if (!usernameValidation && !passwordValidation) {
       setLoading(true);
 
-      const userData = {
       const userData = {
         login: username,
         password: password,
@@ -163,7 +149,6 @@ function LoginForm() {
       )}
     </Box>
   );
-}
 }
 
 export default LoginForm;
